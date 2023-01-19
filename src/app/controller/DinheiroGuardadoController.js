@@ -1,0 +1,1 @@
+const DinheiroGuardadoRepositories = require('../repositories/DinheiroGuardadoRepositories');
