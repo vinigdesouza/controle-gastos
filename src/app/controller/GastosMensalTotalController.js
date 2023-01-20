@@ -3,6 +3,8 @@ const GastosMensalTotalRepository = require('../repositories/GastosMensalTotalRe
 const GastosVariaveisMensaisRepository = require('../repositories/GastosVariaveisMensaisRepository');
 const ComprasParceladasRepository = require('../repositories/ComprasParceladasRepository');
 const UsuarioRepository = require('../repositories/UsuarioRepository');
+const DinheiroGuardadoRepository = require('../repositories/DinheiroGuardadoRepository');
+const SalarioRepository = require('../repositories/SalarioRepository');
 
 class GastosMensalTotalController{
   async index(request, response) {
@@ -41,9 +43,38 @@ class GastosMensalTotalController{
   }
 
   async store(request, response) {
-    const { 
-      valor_total, valor_total_parcelas, valor_total_variaveis, valor_total_fixos, competencia, outros_valores, salario_id, usuario_id
-     } = request.body;
+    const { usuario_id, mes, outros_valores } = request.body;
+
+    const buscaUser = await UsuarioRepository.findById(usuario_id);
+    if(!buscaUser){
+      return response.status(400).json({error: 'Usuário não encontrado!'});
+    }
+
+    const parcelas = await ComprasParceladasRepository.findByUserAndMonth(mes, usuario_id);
+    const variaveis = await GastosVariaveisMensaisRepository.findByUserAndMonth(usuario_id, mes);
+    const fixos = await GastosFixosMensaisRepository.findSumByUser(usuario_id);
+
+    const valorTotalParcelas = Number(parcelas.valor); 
+    const valorTotalVariaveis = Number(variaveis.valor);
+    const valorTotalFixos = Number(fixos.valor);
+
+    const valorTotal = (valorTotalParcelas + valorTotalVariaveis + valorTotalFixos);
+    
+    const dinheiroGuardado = await DinheiroGuardadoRepository.findLast(usuario_id);
+
+    const salarioAtual = await SalarioRepository.findAtivoByUser(usuario_id);
+    const salario = Number(salarioAtual.valor_liquido);
+    const salario_id = salarioAtual.id;
+
+    const sobraMes = (salario - valorTotal);
+
+    const dinheiroGuardadoTotal = (Number(dinheiroGuardado.valor_total) + sobraMes);
+
+    const GastoMensalTotal = await GastosMensalTotalRepository.create(valorTotal, valorTotalParcelas, valorTotalVariaveis, valorTotalFixos, salario_id, {mes, outros_valores, usuario_id});
+
+    const NewDinheiroGuardado = await DinheiroGuardadoRepository.createByMonth(sobraMes, dinheiroGuardadoTotal, mes,usuario_id);
+
+    return response.json({GastoMensalTotal, NewDinheiroGuardado});
 
   }
 

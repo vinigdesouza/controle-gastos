@@ -15,6 +15,13 @@ class SalarioRepository {
     return row;
   }
 
+  async findAtivoByUser(usuario_id){
+    const [row] = await db.query(`SELECT * FROM salario WHERE usuario_id = $1 AND inativo_em IS NULL AND status = $2`, 
+    [usuario_id, 1]);
+
+    return row;
+  }
+
   async create({valor, valor_liquido, status, usuario_id, ativo_em}){
     let date = new Date();
     const [row] = await db.query(`INSERT INTO salario (valor, valor_liquido, status, usuario_id, created_at, ativo_em) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, 
