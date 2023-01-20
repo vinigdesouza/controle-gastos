@@ -10,7 +10,6 @@ class ComprasParceladasRepository{
   async findByUserAndMonth(mes, usuario_id){
     const status_id = 'a57b57e9-5e9a-4eab-9723-9db3c15338f0';
 
-    console.log(mes, usuario_id, status_id)
     const [row] = await db.query(`SELECT SUM(p.valor_parcela) as valor FROM compras_parceladas cp JOIN parcelas p ON p.id_compras_parceladas = cp.id WHERE TO_CHAR(p.competencia, 'YYYY-MM') = $1 AND cp.usuario_id = $2 AND p.status_id = $3`, [mes, usuario_id, status_id]);
     return row;
   }
@@ -31,7 +30,6 @@ class ComprasParceladasRepository{
       const rows = await db.query(`INSERT INTO parcelas (id_compras_parceladas, valor_parcela, competencia, num_parcela, status_id, created_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, [id_compras_parceladas, valor_parcela, competencia, num_parcela, status_id, date]);
 
       mes_parcela = new Date(date.setMonth(date.getMonth() + 1));
-      console.log(rows);
       parcelas.push(rows)
     }
 

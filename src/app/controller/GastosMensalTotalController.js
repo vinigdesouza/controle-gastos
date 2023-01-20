@@ -26,7 +26,7 @@ class GastosMensalTotalController{
     }
 
     const parcelas = await ComprasParceladasRepository.findByUserAndMonth(mes, usuario_id);
-    const variaveis = await GastosVariaveisMensaisRepository.findByUserAndMonth(mes, usuario_id);
+    const variaveis = await GastosVariaveisMensaisRepository.findByUserAndMonth(usuario_id, mes);
     const fixos = await GastosFixosMensaisRepository.findSumByUser(usuario_id);
 
     let valorGastoAteMomento = (Number(parcelas.valor) + Number(variaveis.valor) + Number(fixos.valor));
