@@ -7,6 +7,7 @@ const GastosVariaveisMensaisRoutes = require('./routes/GastosVariaveisMensaisRou
 const ComprasParceladasRoutes = require('./routes/ComprasParceladasRoutes');
 const CategoriaRoutes = require('./routes/CategoriaRoutes');
 const DinheiroGuardadoRoutes = require('./routes/DinheiroGuardadoRoutes');
+const StatusPagamentoRoutes = require('./routes/StatusPagamentoRoutes');
 require('express-async-errors');
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/gastos-variaveis-mensais', GastosVariaveisMensaisRoutes);
 app.use('/compras-parceladas', ComprasParceladasRoutes);
 app.use('/categoria', CategoriaRoutes);
 app.use('/dinheiro-guardado', DinheiroGuardadoRoutes);
+app.use('/status-pagamento', StatusPagamentoRoutes)
 
 // app.use(routes);
 app.use((error, request, response, next) => {
