@@ -16,6 +16,11 @@ class DinheiroGuardadoRepository{
     return row;
   }
 
+  async findByUser(usuario_id){
+    const row = await db.query(`SELECT * FROM dinheiro_guardado WHERE usuario_id = $1`, [usuario_id]);
+    return row;
+  }
+
   async create({valor, competencia, valor_total, usuario_id}){
     const date = new Date();
     const [row] = await db.query(`INSERT INTO dinheiro_guardado (valor, competencia, valor_total, usuario_id, created_at) VALUES($1, $2, $3, $4, $5) RETURNING *`, [valor, competencia, valor_total, usuario_id, date]);

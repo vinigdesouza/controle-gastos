@@ -21,6 +21,13 @@ class DinheiroGuardadoController{
     return response.json(dinheiroGuardado);
   }
 
+  async showByUser(request, response){
+    const { usuario_id } = request.params;
+
+    const dinheiroGuardado = await DinheiroGuardadoRepository.findByUser(usuario_id);
+    return response.json(dinheiroGuardado);
+  }
+
   async store(request, response){
     const { valor, competencia, valor_total, usuario_id } = request.body;
 

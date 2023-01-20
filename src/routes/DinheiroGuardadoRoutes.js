@@ -5,6 +5,7 @@ const router = Router();
 router.get('/', DinheiroGuardadoController.index);
 router.get('/:id', DinheiroGuardadoController.show);
 router.get('/mes/:mes', DinheiroGuardadoController.showByMonth);
+router.get('/user/:usuario_id', DinheiroGuardadoController.showByUser);
 router.delete('/:id', DinheiroGuardadoController.delete);
 router.post('/', DinheiroGuardadoController.store);
 router.put('/:id', DinheiroGuardadoController.update);
