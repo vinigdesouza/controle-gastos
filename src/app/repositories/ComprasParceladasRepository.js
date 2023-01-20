@@ -1,9 +1,14 @@
 const db = require('../../database');
 
 class ComprasParceladasRepository{
+  async findById(id){
+    const [row] = await db.query(`SELECT * FROM compras_parceladas WHERE id = $1`, [id]);
+    return row;
+  }
+
   async findByUser(usuario_id, competencia){
     const status_id = 'a57b57e9-5e9a-4eab-9723-9db3c15338f0';
-    const rows = await db.query(`SELECT cp.nome, cp.valor as valor_total, p.valor_parcela, p.num_parcela as parcela_atual, cp.qtda_parcelas FROM compras_parceladas cp JOIN parcelas p ON p.id_compras_parceladas = cp.id WHERE TO_CHAR(p.competencia, 'YYYY-MM') = $1 AND cp.usuario_id = $2 AND p.status_id = $3`, [competencia, usuario_id, status_id]);
+    const rows = await db.query(`SELECT p.id, cp.nome, cp.valor as valor_total, p.valor_parcela, p.num_parcela as parcela_atual, cp.qtda_parcelas FROM compras_parceladas cp JOIN parcelas p ON p.id_compras_parceladas = cp.id WHERE TO_CHAR(p.competencia, 'YYYY-MM') = $1 AND cp.usuario_id = $2 AND p.status_id = $3`, [competencia, usuario_id, status_id]);
     return rows;
   }
 

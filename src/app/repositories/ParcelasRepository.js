@@ -1,10 +1,6 @@
 const db = require('../../database');
 
 class ParcelasRepository{
-  async findAll(){
-    const rows = await db.query(`SELECT * `); 
-  }
-
   async create({id_compras_parceladas, valor_parcela, competencia, num_parcela, status_id}){
     const date = new Date();
     const [rows] = db.query(`INSERT INTO parcelas (id_compras_parceladas, valor_parcela, competencia, num_parcela, status_id, created_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`, [id_compras_parceladas, valor_parcela, competencia, num_parcela, status_id, date]);
@@ -35,6 +31,13 @@ class ParcelasRepository{
     }
 
     return parcelas;
+  }
+
+  async update(id, {id_compras_parceladas, valor_parcela, competencia, num_parcela, status_id}){
+     const date = new Date();
+     const [row] = db.query(`UPDATE parcelas SET id_compras_parceladas = $1, valor_parcela = $2, competencia = $3, num_parcela = $4, status_id = $5, updated_at = $6 WHERE id = $7 RETURNING *`, [id_compras_parceladas, valor_parcela, competencia, num_parcela, status_id, date, id]);
+
+     return row;
   }
 }
 
