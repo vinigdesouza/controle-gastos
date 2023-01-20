@@ -11,7 +11,7 @@ class GastosVariaveisMensaisRepository{
     return row;
   }
 
-  async findByUserAndMonth(mes, usuario_id){
+  async findByUserAndMonth(usuario_id, mes){
     const [rows] = await db.query(`SELECT SUM(valor) as valor FROM gastos_variaveis_mensal WHERE usuario_id = $1 AND TO_CHAR(mes, 'YYYY-MM') = $2`, [usuario_id, mes]);
     return rows;
   }
