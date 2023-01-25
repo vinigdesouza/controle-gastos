@@ -17,7 +17,7 @@ class GastosVariaveisMensaisController{
       return response.status(400).json({error: 'Usuário não encontrado!'});
     }
 
-    const gastosVariaveisMes = await GastosVariaveisMensaisRepository.findByUserAndMonth(usuario_id, mes);
+    const gastosVariaveisMes = await GastosVariaveisMensaisRepository.findByUser(usuario_id, mes);
 
     return response.json(gastosVariaveisMes);
 
