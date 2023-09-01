@@ -17,7 +17,7 @@ class GastosFixosMensaisRepository {
   }
 
   async findByUser(usuario_id){
-    const rows = await db.query(`SELECT * FROM gastos_fixos_mensal WHERE usuario_id = $1`, [usuario_id]);
+    const rows = await db.query(`SELECT * FROM gastos_fixos_mensal WHERE usuario_id = $1 AND status = $2`, [usuario_id, 1]);
     return rows;
   }
 
