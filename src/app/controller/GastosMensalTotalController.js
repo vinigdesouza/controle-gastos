@@ -30,15 +30,20 @@ class GastosMensalTotalController{
     const parcelas = await ComprasParceladasRepository.findByUserAndMonth(mes, usuario_id);
     const variaveis = await GastosVariaveisMensaisRepository.findByUserAndMonth(usuario_id, mes);
     const fixos = await GastosFixosMensaisRepository.findSumByUser(usuario_id);
+    const salarioAtual = await SalarioRepository.findAtivoByUser(usuario_id);
+    const salario = Number(salarioAtual.valor_liquido);
 
-    let valorGastoAteMomento = (Number(parcelas.valor) + Number(variaveis.valor) + Number(fixos.valor));
+    const valorGastoAteMomento = (Number(parcelas.valor) + Number(variaveis.valor) + Number(fixos.valor));
 
-    valorGastoAteMomento = valorGastoAteMomento.toLocaleString('pt-br', {minimumFractionDigits: 2});
+    const valorGastoAteMomentoResponse = valorGastoAteMomento.toLocaleString('pt-br', {minimumFractionDigits: 2});
     const gastosParcelados = Number(parcelas.valor).toLocaleString('pt-br', {minimumFractionDigits: 2});
     const gastosVariaveis = Number(variaveis.valor).toLocaleString('pt-br', {minimumFractionDigits: 2});
     const gastosFixos = Number(fixos.valor).toLocaleString('pt-br', {minimumFractionDigits: 2});
+    const sobraSalario = (salario - valorGastoAteMomento).toLocaleString('pt-br', {minimumFractionDigits: 2});
 
-    return response.json({gastosFixos, gastosParcelados, gastosVariaveis, valorGastoAteMomento})
+    return response.json(
+      {gastosFixos, gastosParcelados, gastosVariaveis, valorGastoAteMomentoResponse, sobraSalario}
+    )
 
   }
 
